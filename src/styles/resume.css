@@ -1,0 +1,199 @@
+/* 屏幕预览和打印共用的简历排版 */
+:root {
+  --accent: #2563eb;
+  --accent-soft: color-mix(in srgb, var(--accent) 22%, #ffffff);
+  --accent-bg: color-mix(in srgb, var(--accent) 8%, #ffffff);
+  --ink-strong: #0f172a;
+  --ink: #1f2937;
+  --ink-muted: #64748b;
+  --line: #e5e7eb;
+}
+
+.resume {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 48px 56px;
+  background: #ffffff;
+  color: var(--ink);
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.resume > *:first-child {
+  margin-top: 0;
+}
+
+.resume > *:last-child {
+  margin-bottom: 0;
+}
+
+/* 姓名 */
+.resume h1 {
+  font-size: 30px;
+  font-weight: 700;
+  text-align: center;
+  margin: 0 0 14px;
+  letter-spacing: 2px;
+  color: var(--ink-strong);
+}
+
+/* 联系方式（h1 后的第一个 p） */
+.resume h1 + p {
+  text-align: center;
+  color: var(--ink-muted);
+  font-size: 13px;
+  margin: 0 0 8px;
+}
+
+.resume h1 + p a {
+  color: var(--ink-muted);
+}
+
+/* 个人简介引用块 */
+.resume blockquote {
+  margin: 16px 0 24px;
+  padding: 10px 16px;
+  border-left: 3px solid var(--accent);
+  background: var(--accent-bg);
+  color: var(--ink);
+  font-size: 13.5px;
+  border-radius: 0 4px 4px 0;
+}
+
+.resume blockquote > p {
+  margin: 0;
+}
+
+/* 小节标题 */
+.resume h2 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 26px 0 12px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--accent-soft);
+  color: var(--accent);
+  letter-spacing: 0.5px;
+  position: relative;
+}
+
+.resume h2::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 14px;
+  background: var(--accent);
+  margin-right: 8px;
+  vertical-align: -2px;
+  border-radius: 1px;
+}
+
+/* 条目标题（公司/项目名） */
+.resume h3 {
+  font-size: 14.5px;
+  font-weight: 600;
+  margin: 14px 0 6px;
+  color: var(--ink-strong);
+}
+
+/* h3 中的斜体常用作时间 */
+.resume h3 em {
+  float: right;
+  font-style: normal;
+  font-weight: 500;
+  color: var(--accent);
+  font-size: 12.5px;
+  background: var(--accent-bg);
+  padding: 1px 8px;
+  border-radius: 10px;
+}
+
+/* 在条目标题后清浮动 */
+.resume h3::after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+.resume p {
+  margin: 8px 0;
+}
+
+.resume ul,
+.resume ol {
+  margin: 6px 0 10px;
+  padding-left: 22px;
+}
+
+.resume li {
+  margin: 3px 0;
+}
+
+.resume li::marker {
+  color: var(--accent);
+}
+
+.resume a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.15s;
+}
+
+.resume a:hover {
+  border-bottom-color: currentColor;
+}
+
+.resume strong {
+  color: var(--ink-strong);
+  font-weight: 600;
+}
+
+.resume code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  background: var(--accent-bg);
+  color: var(--accent);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+.resume pre {
+  background: #f3f4f6;
+  padding: 12px 14px;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+
+.resume pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+}
+
+.resume hr {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: 20px 0;
+}
+
+.resume table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 10px 0;
+  font-size: 13px;
+}
+
+.resume th,
+.resume td {
+  border: 1px solid var(--line);
+  padding: 6px 10px;
+  text-align: left;
+}
+
+.resume th {
+  background: var(--accent-bg);
+  font-weight: 600;
+  color: var(--accent);
+}

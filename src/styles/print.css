@@ -1,0 +1,117 @@
+@page {
+  size: A4;
+  margin: 16mm 14mm;
+}
+
+@media print {
+  html,
+  body,
+  #root,
+  .app {
+    height: auto !important;
+    background: #ffffff !important;
+  }
+
+  body {
+    color: #000000;
+  }
+
+  /* 隐藏所有非简历元素 */
+  .toolbar,
+  .editor-pane,
+  .panel-editor,
+  .resize-handle {
+    display: none !important;
+  }
+
+  .workspace {
+    display: block !important;
+  }
+
+  /* 解除 react-resizable-panels 的内联宽度限制 */
+  [data-panel-group] {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  [data-panel] {
+    flex: none !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .panel-preview {
+    width: 100% !important;
+  }
+
+  .preview-pane {
+    padding: 0 !important;
+    background: #ffffff !important;
+    overflow: visible !important;
+    height: auto !important;
+    width: 100% !important;
+  }
+
+  .resume {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    font-size: 11pt;
+    line-height: 1.55;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* 确保彩色徽章和小色块在打印时保留 */
+  .resume blockquote,
+  .resume h2,
+  .resume h2::before,
+  .resume h3 em,
+  .resume code,
+  .resume th,
+  .resume li::marker {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .resume h1 {
+    font-size: 22pt;
+    margin-top: 0;
+  }
+
+  .resume h2 {
+    font-size: 13pt;
+    margin: 14pt 0 6pt;
+  }
+
+  .resume h3 {
+    font-size: 11.5pt;
+    margin: 8pt 0 3pt;
+  }
+
+  .resume h3 em {
+    font-size: 9.5pt;
+  }
+
+  /* 分页控制：避免标题孤行 */
+  .resume h1,
+  .resume h2,
+  .resume h3 {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .resume p,
+  .resume li {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .resume a {
+    border-bottom: none;
+  }
+}
