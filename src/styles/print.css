@@ -61,7 +61,6 @@
     box-shadow: none !important;
     border-radius: 0 !important;
     font-size: 11pt;
-    line-height: 1.55;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
@@ -85,12 +84,10 @@
 
   .resume h2 {
     font-size: 13pt;
-    margin: 14pt 0 6pt;
   }
 
   .resume h3 {
     font-size: 11.5pt;
-    margin: 8pt 0 3pt;
   }
 
   .resume h3 em {

@@ -1,5 +1,16 @@
 export function downloadMarkdown(content: string, filename = 'resume.md') {
   const blob = new Blob([content], { type: 'text/markdown;charset=utf-8' });
+  triggerDownload(blob, filename);
+}
+
+export function downloadJSON(data: unknown, filename = 'resume.json') {
+  const blob = new Blob([JSON.stringify(data, null, 2)], {
+    type: 'application/json;charset=utf-8',
+  });
+  triggerDownload(blob, filename);
+}
+
+function triggerDownload(blob: Blob, filename: string) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;

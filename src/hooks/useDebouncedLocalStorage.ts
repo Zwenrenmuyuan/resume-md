@@ -1,15 +1,34 @@
 import { useEffect, useRef, useState } from 'react';
 
-const STORAGE_KEY = 'resumemd:content';
+interface Options<T> {
+  delay?: number;
+  serialize?: (value: T) => string;
+  deserialize?: (raw: string) => T;
+}
 
-export function useDebouncedLocalStorage(
-  initialValue: string,
-  delay = 500
-): [string, (next: string) => void] {
-  const [value, setValue] = useState<string>(() => {
+const defaultStringOptions: Required<Options<string>> = {
+  delay: 500,
+  serialize: (v) => v,
+  deserialize: (s) => s,
+};
+
+export function useDebouncedLocalStorage<T>(
+  key: string,
+  initialValue: T,
+  options?: Options<T>
+): [T, (next: T) => void] {
+  const delay = options?.delay ?? 500;
+  const serialize =
+    options?.serialize ?? ((defaultStringOptions.serialize as unknown) as (v: T) => string);
+  const deserialize =
+    options?.deserialize ??
+    ((defaultStringOptions.deserialize as unknown) as (raw: string) => T);
+
+  const [value, setValue] = useState<T>(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      return saved ?? initialValue;
+      const saved = localStorage.getItem(key);
+      if (saved === null) return initialValue;
+      return deserialize(saved);
     } catch {
       return initialValue;
     }
@@ -23,9 +42,9 @@ export function useDebouncedLocalStorage(
     }
     timer.current = window.setTimeout(() => {
       try {
-        localStorage.setItem(STORAGE_KEY, value);
+        localStorage.setItem(key, serialize(value));
       } catch {
-        // 容量超限或隐私模式下静默失败
+        // 配额超出或隐私模式下静默失败
       }
     }, delay);
     return () => {
@@ -33,15 +52,7 @@ export function useDebouncedLocalStorage(
         window.clearTimeout(timer.current);
       }
     };
-  }, [value, delay]);
+  }, [key, value, delay, serialize]);
 
   return [value, setValue];
-}
-
-export function clearStoredContent() {
-  try {
-    localStorage.removeItem(STORAGE_KEY);
-  } catch {
-    // 忽略
-  }
 }

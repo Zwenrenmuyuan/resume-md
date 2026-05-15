@@ -1,12 +1,25 @@
-import { useRef } from 'react';
-import { downloadMarkdown, readFileAsText } from '../utils/file';
+import { useRef, useState } from 'react';
+import { downloadJSON, downloadMarkdown, readFileAsText } from '../utils/file';
+import type { ResumeSchema } from '../types/schema';
+import type { ResumeSettings } from '../types/settings';
+import { useDialog } from './Dialog';
+import { SettingsPanel } from './SettingsPanel';
+
+type Mode = 'markdown' | 'form';
 
 interface ToolbarProps {
-  content: string;
+  mode: Mode;
+  onModeChange: (mode: Mode) => void;
   accent: string;
   onAccentChange: (color: string) => void;
-  onImport: (text: string) => void;
-  onReset: () => void;
+  settings: ResumeSettings;
+  onSettingsChange: (next: ResumeSettings) => void;
+  mdContent: string;
+  onMdImport: (text: string) => void;
+  onMdReset: () => void;
+  schema: ResumeSchema;
+  onSchemaImport: (schema: ResumeSchema) => void;
+  onSchemaReset: () => void;
 }
 
 const PRESETS = [
@@ -18,31 +31,94 @@ const PRESETS = [
   { name: '炭灰', value: '#475569' },
 ];
 
-export function Toolbar({ content, accent, onAccentChange, onImport, onReset }: ToolbarProps) {
+export function Toolbar({
+  mode,
+  onModeChange,
+  accent,
+  onAccentChange,
+  settings,
+  onSettingsChange,
+  mdContent,
+  onMdImport,
+  onMdReset,
+  schema,
+  onSchemaImport,
+  onSchemaReset,
+}: ToolbarProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const settingsButtonRef = useRef<HTMLButtonElement>(null);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const { confirm, alert } = useDialog();
+  const isForm = mode === 'form';
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
     try {
       const text = await readFileAsText(file);
-      onImport(text);
+      if (isForm) {
+        const parsed = JSON.parse(text) as ResumeSchema;
+        if (!parsed.profile || !Array.isArray(parsed.sections)) {
+          throw new Error('Invalid schema');
+        }
+        onSchemaImport(parsed);
+      } else {
+        onMdImport(text);
+      }
     } catch {
-      alert('读取文件失败');
+      await alert({
+        title: '导入失败',
+        message: isForm ? '文件不是合法的简历 JSON 格式。' : '读取文件失败,请确认是 Markdown 文本。',
+      });
     } finally {
       e.target.value = '';
     }
   }
 
-  function handleReset() {
-    if (window.confirm('确定要重置为默认模板吗？当前内容会被覆盖。')) {
-      onReset();
+  async function handleReset() {
+    const ok = await confirm({
+      title: '重置为默认模板',
+      message: '当前内容会被默认模板覆盖,此操作无法撤销。',
+      confirmText: '重置',
+      danger: true,
+    });
+    if (ok) {
+      if (isForm) onSchemaReset();
+      else onMdReset();
+    }
+  }
+
+  function handleDownload() {
+    if (isForm) {
+      downloadJSON(schema, 'resume.json');
+    } else {
+      downloadMarkdown(mdContent);
     }
   }
 
   return (
     <header className="toolbar">
-      <div className="toolbar-brand">ResumeMD</div>
+      <div className="toolbar-left">
+        <div className="toolbar-brand">ResumeMD</div>
+        <div className="mode-tabs" role="tablist" aria-label="编辑模式">
+          <button
+            role="tab"
+            aria-selected={mode === 'markdown'}
+            className={`mode-tab${mode === 'markdown' ? ' active' : ''}`}
+            onClick={() => onModeChange('markdown')}
+          >
+            Markdown
+          </button>
+          <button
+            role="tab"
+            aria-selected={mode === 'form'}
+            className={`mode-tab${mode === 'form' ? ' active' : ''}`}
+            onClick={() => onModeChange('form')}
+          >
+            表单
+          </button>
+        </div>
+      </div>
       <div className="toolbar-actions">
         <div className="theme-picker" title="主题色">
           {PRESETS.map((p) => (
@@ -64,10 +140,27 @@ export function Toolbar({ content, accent, onAccentChange, onImport, onReset }: 
             />
           </label>
         </div>
-        <button onClick={() => fileInputRef.current?.click()}>导入 .md</button>
-        <button onClick={() => downloadMarkdown(content)}>下载 .md</button>
+        <button onClick={() => fileInputRef.current?.click()}>
+          {isForm ? '导入 .json' : '导入 .md'}
+        </button>
+        <button onClick={handleDownload}>
+          {isForm ? '下载 .json' : '下载 .md'}
+        </button>
         <button onClick={() => window.print()} className="primary">
           导出 PDF
+        </button>
+        <button
+          ref={settingsButtonRef}
+          onClick={() => setSettingsOpen((v) => !v)}
+          className={`icon-btn${settingsOpen ? ' active' : ''}`}
+          title="排版设置"
+          aria-label="排版设置"
+          aria-expanded={settingsOpen}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="3" />
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+          </svg>
         </button>
         <button onClick={handleReset} className="ghost">
           重置
@@ -75,9 +168,16 @@ export function Toolbar({ content, accent, onAccentChange, onImport, onReset }: 
         <input
           ref={fileInputRef}
           type="file"
-          accept=".md,.markdown,text/markdown"
+          accept={isForm ? '.json,application/json' : '.md,.markdown,text/markdown'}
           onChange={handleFileChange}
           hidden
+        />
+        <SettingsPanel
+          open={settingsOpen}
+          anchorRef={settingsButtonRef}
+          settings={settings}
+          onChange={onSettingsChange}
+          onClose={() => setSettingsOpen(false)}
         />
       </div>
     </header>

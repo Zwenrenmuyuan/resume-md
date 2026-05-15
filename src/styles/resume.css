@@ -7,6 +7,12 @@
   --ink: #1f2937;
   --ink-muted: #64748b;
   --line: #e5e7eb;
+
+  /* 可调间距(SettingsPanel 控制) */
+  --resume-section-gap: 26px;
+  --resume-paragraph-gap: 8px;
+  --resume-list-item-gap: 3px;
+  --resume-line-height: 1.7;
 }
 
 .resume {
@@ -18,7 +24,7 @@
   border-radius: 4px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
   font-size: 14px;
-  line-height: 1.7;
+  line-height: var(--resume-line-height);
 }
 
 .resume > *:first-child {
@@ -70,7 +76,7 @@
 .resume h2 {
   font-size: 16px;
   font-weight: 700;
-  margin: 26px 0 12px;
+  margin: var(--resume-section-gap) 0 12px;
   padding-bottom: 6px;
   border-bottom: 2px solid var(--accent-soft);
   color: var(--accent);
@@ -117,7 +123,7 @@
 }
 
 .resume p {
-  margin: 8px 0;
+  margin: var(--resume-paragraph-gap) 0;
 }
 
 .resume ul,
@@ -127,7 +133,7 @@
 }
 
 .resume li {
-  margin: 3px 0;
+  margin: var(--resume-list-item-gap) 0;
 }
 
 .resume li::marker {
