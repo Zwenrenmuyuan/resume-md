@@ -1,6 +1,14 @@
 import type { TimelineItem, TimelineSection } from '../../types/schema';
 import { newId } from '../../utils/id';
 import { useDialog } from '../Dialog';
+import { FormButton } from './FormButton';
+import {
+  FormCard,
+  FormCardActions,
+  FormCardBody,
+  FormCardHeader,
+} from './FormCard';
+import { InlineTextInput } from './FormControls';
 import { MoveButtons } from './MoveButtons';
 import { TimelineItemCard } from './TimelineItemCard';
 
@@ -73,16 +81,15 @@ export function TimelineSectionCard({
   }
 
   return (
-    <section className="section-card">
-      <header className="section-card-header">
-        <input
-          type="text"
+    <FormCard variant="section">
+      <FormCardHeader variant="section">
+        <InlineTextInput
           className="section-title-input"
           value={section.title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="区块标题(如:工作经历)"
         />
-        <div className="section-card-actions">
+        <FormCardActions variant="section">
           <span className="section-type-tag">时间条目</span>
           <MoveButtons
             canUp={index > 0}
@@ -90,17 +97,18 @@ export function TimelineSectionCard({
             onUp={onMoveUp}
             onDown={onMoveDown}
           />
-          <button
-            type="button"
-            className="btn-icon danger"
+          <FormButton
+            size="icon"
+            variant="danger"
             onClick={handleRemoveSection}
             title="删除区块"
+            aria-label="删除区块"
           >
             ✕
-          </button>
-        </div>
-      </header>
-      <div className="section-card-body">
+          </FormButton>
+        </FormCardActions>
+      </FormCardHeader>
+      <FormCardBody variant="section">
         {section.items.map((item, i) => (
           <TimelineItemCard
             key={item.id}
@@ -113,10 +121,10 @@ export function TimelineSectionCard({
             onRemove={() => removeItem(item.id)}
           />
         ))}
-        <button type="button" className="btn-add" onClick={addItem}>
+        <FormButton size="add" onClick={addItem}>
           + 添加条目
-        </button>
-      </div>
-    </section>
+        </FormButton>
+      </FormCardBody>
+    </FormCard>
   );
 }

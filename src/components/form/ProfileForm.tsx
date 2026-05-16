@@ -7,7 +7,11 @@ import {
   removeHeaderItem as removeHeaderItemFromRows,
 } from '../../utils/headerLayout';
 import { newId } from '../../utils/id';
-import { Field } from './Field';
+import { EmptyState } from './EmptyState';
+import { FormButton } from './FormButton';
+import { FormCard, FormCardBody, FormCardHeader } from './FormCard';
+import { CheckboxField, FileInput, SelectInput, TextInput } from './FormControls';
+import { FormField } from './FormField';
 import { MarkdownField } from './MarkdownField';
 
 interface ProfileFormProps {
@@ -19,6 +23,11 @@ const HEADER_KIND_LABELS: Record<HeaderItemKind, string> = {
   text: '文本',
   link: '链接',
 };
+
+const HEADER_KIND_OPTIONS = Object.entries(HEADER_KIND_LABELS).map(([value, label]) => ({
+  value,
+  label,
+}));
 
 export function ProfileForm({ profile, onChange }: ProfileFormProps) {
   const avatarInputRef = useRef<HTMLInputElement>(null);
@@ -72,11 +81,11 @@ export function ProfileForm({ profile, onChange }: ProfileFormProps) {
   }
 
   return (
-    <section className="form-card">
-      <header className="form-card-header">
+    <FormCard variant="profile">
+      <FormCardHeader variant="profile">
         <h2>个人信息</h2>
-      </header>
-      <div className="form-card-body">
+      </FormCardHeader>
+      <FormCardBody variant="profile">
         <div className="avatar-editor">
           <span className="form-field-label">头像</span>
           <div className="avatar-editor-body">
@@ -86,27 +95,18 @@ export function ProfileForm({ profile, onChange }: ProfileFormProps) {
               <div className="avatar-empty">未上传头像</div>
             )}
             <div className="avatar-actions">
-              <button
-                type="button"
-                className="btn-mini"
-                onClick={() => avatarInputRef.current?.click()}
-              >
+              <FormButton onClick={() => avatarInputRef.current?.click()}>
                 {profile.avatarSrc ? '替换头像' : '上传头像'}
-              </button>
+              </FormButton>
               {profile.avatarSrc && (
-                <button
-                  type="button"
-                  className="btn-mini danger"
-                  onClick={() => update('avatarSrc', '')}
-                >
+                <FormButton variant="danger" onClick={() => update('avatarSrc', '')}>
                   移除
-                </button>
+                </FormButton>
               )}
             </div>
           </div>
-          <input
+          <FileInput
             ref={avatarInputRef}
-            type="file"
             accept="image/jpeg,image/png,image/webp"
             onChange={handleAvatarFileChange}
             hidden
@@ -114,100 +114,96 @@ export function ProfileForm({ profile, onChange }: ProfileFormProps) {
         </div>
 
         <div className="form-row">
-          <Field label="姓名" span={2}>
-            <input
-              type="text"
+          <FormField label="姓名" span={2}>
+            <TextInput
               value={profile.name}
               onChange={(e) => update('name', e.target.value)}
               placeholder="张三"
             />
-          </Field>
+          </FormField>
         </div>
 
         <div className="form-subsection">
           <div className="form-subsection-header">
             <span className="form-subsection-title">头部信息</span>
-            <button type="button" className="btn-mini" onClick={addHeaderItem}>
+            <FormButton onClick={addHeaderItem}>
               + 添加
-            </button>
+            </FormButton>
           </div>
           {profile.headerItems.length === 0 ? (
-            <p className="form-empty">暂无头部信息</p>
+            <EmptyState>暂无头部信息</EmptyState>
           ) : (
             <div className="header-item-list">
               {profile.headerItems.map((item) => (
                 <div key={item.id} className="header-item-card">
                   <div className="header-item-main">
-                    <input
-                      type="text"
+                    <TextInput
                       className="header-item-label"
+                      controlSize="compact"
                       value={item.label}
                       onChange={(e) => updateHeaderItem(item.id, { label: e.target.value })}
                       placeholder="标签，如 求职意向"
                     />
-                    <select
+                    <SelectInput
                       className="header-item-kind"
+                      controlSize="compact"
                       value={item.kind}
-                      onChange={(e) =>
-                        updateHeaderItem(item.id, { kind: e.target.value as HeaderItemKind })
+                      options={HEADER_KIND_OPTIONS}
+                      ariaLabel="头部信息类型"
+                      onValueChange={(value) =>
+                        updateHeaderItem(item.id, { kind: value as HeaderItemKind })
                       }
-                    >
-                      {Object.entries(HEADER_KIND_LABELS).map(([value, label]) => (
-                        <option key={value} value={value}>
-                          {label}
-                        </option>
-                      ))}
-                    </select>
-                    <input
-                      type="text"
+                    />
+                    <TextInput
                       className="header-item-value"
+                      controlSize="compact"
                       value={item.value}
                       onChange={(e) => updateHeaderItem(item.id, { value: e.target.value })}
                       placeholder={getValuePlaceholder(item.kind)}
                     />
-                    <button
-                      type="button"
-                      className="btn-icon danger"
+                    <FormButton
+                      size="icon"
+                      variant="danger"
                       onClick={() => deleteHeaderItem(item.id)}
                       title="删除"
+                      aria-label="删除头部信息"
                     >
                       ✕
-                    </button>
+                    </FormButton>
                   </div>
                   {item.kind === 'link' && (
-                    <input
+                    <TextInput
                       type="url"
                       className="header-item-href"
+                      controlSize="compact"
                       value={item.href ?? ''}
                       onChange={(e) => updateHeaderItem(item.id, { href: e.target.value })}
                       placeholder="https://..."
                     />
                   )}
-                  <label className="header-item-option">
-                    <input
-                      type="checkbox"
-                      checked={item.showLabel}
-                      onChange={(e) =>
-                        updateHeaderItem(item.id, { showLabel: e.target.checked })
-                      }
-                    />
-                    <span>预览中显示标签</span>
-                  </label>
+                  <CheckboxField
+                    className="header-item-option"
+                    checked={item.showLabel}
+                    onCheckedChange={(checked) =>
+                      updateHeaderItem(item.id, { showLabel: checked })
+                    }
+                    label="预览中显示标签"
+                  />
                 </div>
               ))}
             </div>
           )}
         </div>
 
-        <Field label="一句话简介(支持 Markdown)" span={2}>
+        <FormField label="一句话简介(支持 Markdown)" span={2}>
           <MarkdownField
             value={profile.summary}
             onChange={(v) => update('summary', v)}
             placeholder="一句话总结你自己..."
           />
-        </Field>
-      </div>
-    </section>
+        </FormField>
+      </FormCardBody>
+    </FormCard>
   );
 }
 

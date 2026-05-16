@@ -1,5 +1,13 @@
 import type { FreeformSection } from '../../types/schema';
 import { useDialog } from '../Dialog';
+import { FormButton } from './FormButton';
+import {
+  FormCard,
+  FormCardActions,
+  FormCardBody,
+  FormCardHeader,
+} from './FormCard';
+import { InlineTextInput } from './FormControls';
 import { MarkdownField } from './MarkdownField';
 import { MoveButtons } from './MoveButtons';
 
@@ -43,16 +51,15 @@ export function FreeformSectionCard({
   }
 
   return (
-    <section className="section-card">
-      <header className="section-card-header">
-        <input
-          type="text"
+    <FormCard variant="section">
+      <FormCardHeader variant="section">
+        <InlineTextInput
           className="section-title-input"
           value={section.title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="区块标题(如:技能清单)"
         />
-        <div className="section-card-actions">
+        <FormCardActions variant="section">
           <span className="section-type-tag freeform">自由内容</span>
           <MoveButtons
             canUp={index > 0}
@@ -60,24 +67,25 @@ export function FreeformSectionCard({
             onUp={onMoveUp}
             onDown={onMoveDown}
           />
-          <button
-            type="button"
-            className="btn-icon danger"
+          <FormButton
+            size="icon"
+            variant="danger"
             onClick={handleRemove}
             title="删除区块"
+            aria-label="删除区块"
           >
             ✕
-          </button>
-        </div>
-      </header>
-      <div className="section-card-body">
+          </FormButton>
+        </FormCardActions>
+      </FormCardHeader>
+      <FormCardBody variant="section">
         <MarkdownField
           value={section.body}
           onChange={setBody}
           placeholder="支持 Markdown 语法..."
           minHeight={120}
         />
-      </div>
-    </section>
+      </FormCardBody>
+    </FormCard>
   );
 }
