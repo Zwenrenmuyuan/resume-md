@@ -1,6 +1,7 @@
 export const defaultTemplate = `# 张三
 
-zhangsan@example.com · 138-0000-0000 · [github.com/zhangsan](https://github.com/zhangsan) · 上海
+zhangsan@example.com · 138-0000-0000  
+[github.com/zhangsan](https://github.com/zhangsan) · 上海
 
 > 5 年全栈开发经验，擅长 React / Node.js，主导过日活 50 万级产品的前端架构。追求简洁、可维护的工程实践。
 

@@ -97,6 +97,7 @@ export default function App() {
         onMdImport={setMdContent}
         onMdReset={() => setMdContent(defaultTemplate)}
         schema={schema}
+        onSchemaChange={setSchema}
         onSchemaImport={setSchema}
         onSchemaReset={() => setSchema(buildDefaultSchema())}
       />

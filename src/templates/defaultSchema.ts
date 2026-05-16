@@ -1,20 +1,45 @@
+import { buildDefaultHeaderRows } from '../utils/headerLayout';
 import { newId } from '../utils/id';
 import type { ResumeSchema } from '../types/schema';
 
 export function buildDefaultSchema(): ResumeSchema {
+  const headerItems = [
+    {
+      id: newId('h_'),
+      label: '邮箱',
+      kind: 'text' as const,
+      value: 'zhangsan@example.com',
+      showLabel: false,
+    },
+    {
+      id: newId('h_'),
+      label: '电话',
+      kind: 'text' as const,
+      value: '138-0000-0000',
+      showLabel: false,
+    },
+    {
+      id: newId('h_'),
+      label: 'GitHub',
+      kind: 'link' as const,
+      value: 'github.com/zhangsan',
+      href: 'https://github.com/zhangsan',
+      showLabel: false,
+    },
+    {
+      id: newId('h_'),
+      label: '地点',
+      kind: 'text' as const,
+      value: '上海',
+      showLabel: false,
+    },
+  ];
+
   return {
     profile: {
       name: '张三',
-      email: 'zhangsan@example.com',
-      phone: '138-0000-0000',
-      location: '上海',
-      links: [
-        {
-          id: newId(),
-          label: 'GitHub',
-          url: 'https://github.com/zhangsan',
-        },
-      ],
+      headerItems,
+      headerRows: buildDefaultHeaderRows(headerItems),
       summary:
         '5 年全栈开发经验,擅长 React / Node.js,主导过日活 50 万级产品的前端架构。追求简洁、可维护的工程实践。',
     },

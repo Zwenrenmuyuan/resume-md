@@ -1,15 +1,18 @@
-export interface Link {
+export type HeaderItemKind = 'text' | 'link';
+
+export interface HeaderItem {
   id: string;
   label: string;
-  url: string;
+  kind: HeaderItemKind;
+  value: string;
+  href?: string;
+  showLabel: boolean;
 }
 
 export interface Profile {
   name: string;
-  email: string;
-  phone: string;
-  location: string;
-  links: Link[];
+  headerItems: HeaderItem[];
+  headerRows: string[][];
   summary: string;
 }
 

@@ -456,6 +456,63 @@ body {
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 18%, transparent);
 }
 
+.header-item-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.header-item-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.header-item-main {
+  display: grid;
+  grid-template-columns: 92px 76px 1fr auto;
+  gap: 6px;
+  align-items: center;
+}
+
+.header-item-main input,
+.header-item-main select,
+.header-item-href {
+  height: 30px;
+  padding: 0 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 5px;
+  background: #ffffff;
+  color: #1f2937;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.header-item-main input:focus,
+.header-item-main select:focus,
+.header-item-href:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+.header-item-href {
+  width: 100%;
+}
+
+.header-item-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.header-item-option input {
+  margin: 0;
+}
+
 /* ---- 时间条目卡片 ---- */
 .item-card {
   background: #fafafa;
@@ -784,7 +841,7 @@ body {
   position: absolute;
   top: calc(100% + 6px);
   right: 20px;
-  width: 300px;
+  width: 340px;
   background: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 10px;
@@ -838,6 +895,37 @@ body {
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+.settings-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.settings-group + .settings-group {
+  padding-top: 12px;
+  border-top: 1px solid #f3f4f6;
+}
+
+.settings-group-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.settings-group-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.settings-group-hint {
+  margin: -4px 0 0;
+  color: #9ca3af;
+  font-size: 11px;
+  line-height: 1.5;
 }
 
 .settings-row {
@@ -907,6 +995,74 @@ body {
   border: 2px solid #ffffff;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   cursor: pointer;
+}
+
+.header-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.header-layout-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.header-layout-label {
+  color: #6b7280;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.header-layout-empty {
+  display: flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px dashed #d1d5db;
+  border-radius: 6px;
+  background: #fafafa;
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+.header-layout-items {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.header-layout-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  padding: 4px 6px 4px 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background: #fafafa;
+}
+
+.header-layout-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  color: #374151;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.header-layout-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.header-layout-actions .btn-icon {
+  width: 22px;
+  height: 22px;
+  font-size: 11px;
 }
 
 /* 工具栏需要相对定位让 settings-panel 锚定 */

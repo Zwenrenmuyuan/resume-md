@@ -18,6 +18,7 @@ interface ToolbarProps {
   onMdImport: (text: string) => void;
   onMdReset: () => void;
   schema: ResumeSchema;
+  onSchemaChange: (schema: ResumeSchema) => void;
   onSchemaImport: (schema: ResumeSchema) => void;
   onSchemaReset: () => void;
 }
@@ -42,6 +43,7 @@ export function Toolbar({
   onMdImport,
   onMdReset,
   schema,
+  onSchemaChange,
   onSchemaImport,
   onSchemaReset,
 }: ToolbarProps) {
@@ -58,7 +60,13 @@ export function Toolbar({
       const text = await readFileAsText(file);
       if (isForm) {
         const parsed = JSON.parse(text) as ResumeSchema;
-        if (!parsed.profile || !Array.isArray(parsed.sections)) {
+        if (
+          !parsed.profile ||
+          !Array.isArray(parsed.profile.headerItems) ||
+          !Array.isArray(parsed.profile.headerRows) ||
+          !parsed.profile.headerRows.every(Array.isArray) ||
+          !Array.isArray(parsed.sections)
+        ) {
           throw new Error('Invalid schema');
         }
         onSchemaImport(parsed);
@@ -153,8 +161,8 @@ export function Toolbar({
           ref={settingsButtonRef}
           onClick={() => setSettingsOpen((v) => !v)}
           className={`icon-btn${settingsOpen ? ' active' : ''}`}
-          title="排版设置"
-          aria-label="排版设置"
+          title="设置"
+          aria-label="设置"
           aria-expanded={settingsOpen}
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -177,6 +185,9 @@ export function Toolbar({
           anchorRef={settingsButtonRef}
           settings={settings}
           onChange={onSettingsChange}
+          profile={schema.profile}
+          onProfileChange={(profile) => onSchemaChange({ ...schema, profile })}
+          showHeaderLayout={isForm}
           onClose={() => setSettingsOpen(false)}
         />
       </div>
