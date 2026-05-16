@@ -1,4 +1,7 @@
+import { useRef } from 'react';
 import type { HeaderItem, HeaderItemKind, Profile } from '../../types/schema';
+import { useDialog } from '../Dialog';
+import { processAvatarFile } from '../../utils/avatar';
 import {
   appendHeaderItem,
   removeHeaderItem as removeHeaderItemFromRows,
@@ -18,6 +21,9 @@ const HEADER_KIND_LABELS: Record<HeaderItemKind, string> = {
 };
 
 export function ProfileForm({ profile, onChange }: ProfileFormProps) {
+  const avatarInputRef = useRef<HTMLInputElement>(null);
+  const { alert } = useDialog();
+
   function update<K extends keyof Profile>(key: K, value: Profile[K]) {
     onChange({ ...profile, [key]: value });
   }
@@ -49,12 +55,64 @@ export function ProfileForm({ profile, onChange }: ProfileFormProps) {
     });
   }
 
+  async function handleAvatarFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      update('avatarSrc', await processAvatarFile(file));
+    } catch (error) {
+      await alert({
+        title: '头像上传失败',
+        message: error instanceof Error ? error.message : '无法处理这张图片。',
+      });
+    } finally {
+      e.target.value = '';
+    }
+  }
+
   return (
     <section className="form-card">
       <header className="form-card-header">
         <h2>个人信息</h2>
       </header>
       <div className="form-card-body">
+        <div className="avatar-editor">
+          <span className="form-field-label">头像</span>
+          <div className="avatar-editor-body">
+            {profile.avatarSrc ? (
+              <img className="avatar-thumb" src={profile.avatarSrc} alt="当前头像" />
+            ) : (
+              <div className="avatar-empty">未上传头像</div>
+            )}
+            <div className="avatar-actions">
+              <button
+                type="button"
+                className="btn-mini"
+                onClick={() => avatarInputRef.current?.click()}
+              >
+                {profile.avatarSrc ? '替换头像' : '上传头像'}
+              </button>
+              {profile.avatarSrc && (
+                <button
+                  type="button"
+                  className="btn-mini danger"
+                  onClick={() => update('avatarSrc', '')}
+                >
+                  移除
+                </button>
+              )}
+            </div>
+          </div>
+          <input
+            ref={avatarInputRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            onChange={handleAvatarFileChange}
+            hidden
+          />
+        </div>
+
         <div className="form-row">
           <Field label="姓名" span={2}>
             <input

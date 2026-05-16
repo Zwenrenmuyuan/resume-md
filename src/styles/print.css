@@ -82,6 +82,12 @@
     margin-top: 0;
   }
 
+  .resume-avatar {
+    width: 24mm;
+    height: 32mm;
+    margin: 0 0 4mm 6mm;
+  }
+
   .resume h2 {
     font-size: 13pt;
   }

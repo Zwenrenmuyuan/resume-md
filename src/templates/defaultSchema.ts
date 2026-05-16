@@ -38,6 +38,7 @@ export function buildDefaultSchema(): ResumeSchema {
   return {
     profile: {
       name: '张三',
+      avatarSrc: '',
       headerItems,
       headerRows: buildDefaultHeaderRows(headerItems),
       summary:

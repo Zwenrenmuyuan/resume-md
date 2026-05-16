@@ -27,6 +27,22 @@
   line-height: var(--resume-line-height);
 }
 
+.resume.has-avatar {
+  display: flow-root;
+}
+
+.resume-avatar {
+  float: right;
+  width: 88px;
+  height: 118px;
+  display: block;
+  margin: -12px 0 16px 24px;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: #ffffff;
+}
+
 .resume > *:first-child {
   margin-top: 0;
 }
@@ -66,6 +82,14 @@
   color: var(--ink);
   font-size: 13.5px;
   border-radius: 0 4px 4px 0;
+}
+
+.resume.has-avatar > blockquote:first-of-type {
+  clear: both;
+}
+
+.resume.has-avatar h2 {
+  clear: both;
 }
 
 .resume blockquote > p {

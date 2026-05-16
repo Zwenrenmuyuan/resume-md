@@ -2,6 +2,7 @@ import React from 'react';
 import ReactMarkdown, { type Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import type { HeaderItem, Profile, ResumeSchema } from '../types/schema';
+import { splitMarkdownAvatar } from '../utils/avatar';
 
 type Mode = 'markdown' | 'form';
 
@@ -36,12 +37,14 @@ const inlineMdComponents: Components = {
 };
 
 export function Preview({ mode, mdContent, schema }: PreviewProps) {
+  const markdown = splitMarkdownAvatar(mdContent);
+
   return (
     <div className="preview-pane">
       {mode === 'markdown' ? (
-        <article className="resume">
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>{mdContent}</ReactMarkdown>
-        </article>
+        <ResumeArticle avatarSrc={markdown.avatarSrc}>
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdown.body}</ReactMarkdown>
+        </ResumeArticle>
       ) : (
         <SchemaPreview schema={schema} />
       )}
@@ -56,7 +59,7 @@ function SchemaPreview({ schema }: { schema: ResumeSchema }) {
     .filter((row) => row.length > 0);
 
   return (
-    <article className="resume">
+    <ResumeArticle avatarSrc={profile.avatarSrc} avatarAlt={profile.name}>
       {profile.name && <h1>{profile.name}</h1>}
       {headerRows.length > 0 && (
         <p>
@@ -117,6 +120,29 @@ function SchemaPreview({ schema }: { schema: ResumeSchema }) {
           </React.Fragment>
         );
       })}
+    </ResumeArticle>
+  );
+}
+
+function ResumeArticle({
+  avatarSrc,
+  avatarAlt,
+  children,
+}: {
+  avatarSrc: string;
+  avatarAlt?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <article className={`resume${avatarSrc ? ' has-avatar' : ''}`}>
+      {avatarSrc && (
+        <img
+          className="resume-avatar"
+          src={avatarSrc}
+          alt={avatarAlt ? `${avatarAlt}头像` : '头像'}
+        />
+      )}
+      {children}
     </article>
   );
 }

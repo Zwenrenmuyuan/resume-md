@@ -1,6 +1,7 @@
 import CodeMirror from '@uiw/react-codemirror';
 import { markdown } from '@codemirror/lang-markdown';
 import { EditorView } from '@codemirror/view';
+import { markdownAvatarWidget } from './MarkdownAvatarWidget';
 
 interface EditorProps {
   value: string;
@@ -19,7 +20,7 @@ export function Editor({ value, onChange }: EditorProps) {
       <CodeMirror
         value={value}
         onChange={onChange}
-        extensions={[markdown(), EditorView.lineWrapping, theme]}
+        extensions={[markdown(), markdownAvatarWidget(), EditorView.lineWrapping, theme]}
         basicSetup={{
           lineNumbers: true,
           highlightActiveLine: true,

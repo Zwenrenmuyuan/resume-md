@@ -11,6 +11,7 @@ export interface HeaderItem {
 
 export interface Profile {
   name: string;
+  avatarSrc: string;
   headerItems: HeaderItem[];
   headerRows: string[][];
   summary: string;

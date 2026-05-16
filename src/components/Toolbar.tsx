@@ -1,4 +1,10 @@
 import { useRef, useState } from 'react';
+import {
+  getMarkdownAvatar,
+  processAvatarFile,
+  removeMarkdownAvatar,
+  setMarkdownAvatar,
+} from '../utils/avatar';
 import { downloadJSON, downloadMarkdown, readFileAsText } from '../utils/file';
 import type { ResumeSchema } from '../types/schema';
 import type { ResumeSettings } from '../types/settings';
@@ -48,10 +54,12 @@ export function Toolbar({
   onSchemaReset,
 }: ToolbarProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const avatarInputRef = useRef<HTMLInputElement>(null);
   const settingsButtonRef = useRef<HTMLButtonElement>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const { confirm, alert } = useDialog();
   const isForm = mode === 'form';
+  const markdownAvatar = getMarkdownAvatar(mdContent);
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -62,6 +70,7 @@ export function Toolbar({
         const parsed = JSON.parse(text) as ResumeSchema;
         if (
           !parsed.profile ||
+          typeof parsed.profile.avatarSrc !== 'string' ||
           !Array.isArray(parsed.profile.headerItems) ||
           !Array.isArray(parsed.profile.headerRows) ||
           !parsed.profile.headerRows.every(Array.isArray) ||
@@ -77,6 +86,23 @@ export function Toolbar({
       await alert({
         title: '导入失败',
         message: isForm ? '文件不是合法的简历 JSON 格式。' : '读取文件失败,请确认是 Markdown 文本。',
+      });
+    } finally {
+      e.target.value = '';
+    }
+  }
+
+  async function handleAvatarFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const avatarSrc = await processAvatarFile(file);
+      onMdImport(setMarkdownAvatar(mdContent, avatarSrc));
+    } catch (error) {
+      await alert({
+        title: '头像上传失败',
+        message: error instanceof Error ? error.message : '无法处理这张图片。',
       });
     } finally {
       e.target.value = '';
@@ -148,6 +174,18 @@ export function Toolbar({
             />
           </label>
         </div>
+        {!isForm && (
+          <>
+            <button onClick={() => avatarInputRef.current?.click()}>
+              {markdownAvatar ? '替换头像' : '上传头像'}
+            </button>
+            {markdownAvatar && (
+              <button onClick={() => onMdImport(removeMarkdownAvatar(mdContent))}>
+                移除头像
+              </button>
+            )}
+          </>
+        )}
         <button onClick={() => fileInputRef.current?.click()}>
           {isForm ? '导入 .json' : '导入 .md'}
         </button>
@@ -180,6 +218,15 @@ export function Toolbar({
           onChange={handleFileChange}
           hidden
         />
+        {!isForm && (
+          <input
+            ref={avatarInputRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            onChange={handleAvatarFileChange}
+            hidden
+          />
+        )}
         <SettingsPanel
           open={settingsOpen}
           anchorRef={settingsButtonRef}
