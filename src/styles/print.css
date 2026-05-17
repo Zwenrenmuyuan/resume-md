@@ -55,6 +55,12 @@
   }
 
   .resume {
+    --resume-avatar-width: 24mm;
+    --resume-avatar-height: 32mm;
+    --resume-avatar-right: 0mm;
+    --resume-avatar-top: 0mm;
+    --resume-avatar-header-space: 30mm;
+
     max-width: none !important;
     margin: 0 !important;
     padding: 0 !important;
@@ -83,9 +89,11 @@
   }
 
   .resume-avatar {
-    width: 24mm;
-    height: 32mm;
-    margin: 0 0 4mm 6mm;
+    top: var(--resume-avatar-top);
+    right: var(--resume-avatar-right);
+    width: var(--resume-avatar-width);
+    height: var(--resume-avatar-height);
+    margin: 0;
   }
 
   .resume h2 {

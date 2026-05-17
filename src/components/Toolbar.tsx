@@ -32,7 +32,7 @@ interface ToolbarProps {
 const PRESETS = [
   { name: '深蓝', value: '#2563eb' },
   { name: '青墨', value: '#0f766e' },
-  { name: '森绿', value: '#047857' },
+  { name: '橙金', value: '#d97706' },
   { name: '玄紫', value: '#6d28d9' },
   { name: '砖红', value: '#be123c' },
   { name: '炭灰', value: '#475569' },

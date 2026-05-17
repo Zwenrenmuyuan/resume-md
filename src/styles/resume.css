@@ -16,6 +16,13 @@
 }
 
 .resume {
+  --resume-avatar-width: 88px;
+  --resume-avatar-height: 118px;
+  --resume-avatar-right: 56px;
+  --resume-avatar-top: 36px;
+  --resume-avatar-header-space: 112px;
+
+  position: relative;
   max-width: 800px;
   margin: 0 auto;
   padding: 48px 56px;
@@ -27,16 +34,14 @@
   line-height: var(--resume-line-height);
 }
 
-.resume.has-avatar {
-  display: flow-root;
-}
-
 .resume-avatar {
-  float: right;
-  width: 88px;
-  height: 118px;
+  position: absolute;
+  top: var(--resume-avatar-top);
+  right: var(--resume-avatar-right);
+  width: var(--resume-avatar-width);
+  height: var(--resume-avatar-height);
   display: block;
-  margin: -12px 0 16px 24px;
+  margin: 0;
   object-fit: cover;
   border: 1px solid var(--line);
   border-radius: 2px;
@@ -61,6 +66,13 @@
   color: var(--ink-strong);
 }
 
+.resume.has-avatar h1,
+.resume.has-avatar h1 + p {
+  box-sizing: border-box;
+  padding-right: var(--resume-avatar-header-space);
+  padding-left: var(--resume-avatar-header-space);
+}
+
 /* 联系方式（h1 后的第一个 p） */
 .resume h1 + p {
   text-align: center;
@@ -82,14 +94,6 @@
   color: var(--ink);
   font-size: 13.5px;
   border-radius: 0 4px 4px 0;
-}
-
-.resume.has-avatar > blockquote:first-of-type {
-  clear: both;
-}
-
-.resume.has-avatar h2 {
-  clear: both;
 }
 
 .resume blockquote > p {
