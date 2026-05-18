@@ -67,7 +67,6 @@
     padding: 0 !important;
     box-shadow: none !important;
     border-radius: 0 !important;
-    font-size: 11pt;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
@@ -85,7 +84,6 @@
   }
 
   .resume h1 {
-    font-size: 22pt;
     margin-top: 0;
   }
 
@@ -95,18 +93,6 @@
     width: var(--resume-avatar-width);
     height: var(--resume-avatar-height);
     margin: 0;
-  }
-
-  .resume h2 {
-    font-size: 13pt;
-  }
-
-  .resume h3 {
-    font-size: 11.5pt;
-  }
-
-  .resume h3 em {
-    font-size: 9.5pt;
   }
 
   /* 分页控制：避免标题孤行 */

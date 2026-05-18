@@ -8,7 +8,11 @@
   --ink-muted: #64748b;
   --line: #e5e7eb;
 
-  /* 可调间距(SettingsPanel 控制) */
+  /* 可调字号与间距(SettingsPanel 控制) */
+  /* 三组字号基准:个人信息以姓名 h1 为基准,标题以 h2 为基准,正文为整体基础 */
+  --resume-profile-size: 30px;
+  --resume-heading-size: 16px;
+  --resume-body-size: 14px;
   --resume-section-gap: 26px;
   --resume-paragraph-gap: 8px;
   --resume-list-item-gap: 3px;
@@ -30,7 +34,7 @@
   color: var(--ink);
   border-radius: 4px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-  font-size: 14px;
+  font-size: var(--resume-body-size);
   line-height: var(--resume-line-height);
 }
 
@@ -58,7 +62,7 @@
 
 /* 姓名 */
 .resume h1 {
-  font-size: 30px;
+  font-size: var(--resume-profile-size);
   font-weight: 700;
   text-align: center;
   margin: 0 0 14px;
@@ -73,11 +77,11 @@
   padding-left: var(--resume-avatar-header-space);
 }
 
-/* 联系方式（h1 后的第一个 p） */
+/* 联系方式（h1 后的第一个 p）：与姓名同属个人信息组，按 13/30 比例联动 */
 .resume h1 + p {
   text-align: center;
   color: var(--ink-muted);
-  font-size: 13px;
+  font-size: calc(var(--resume-profile-size) * 13 / 30);
   margin: 0 0 8px;
 }
 
@@ -91,14 +95,14 @@
   color: var(--ink-muted);
 }
 
-/* 个人简介引用块 */
+/* 个人简介引用块：个人信息组，按 13.5/30 比例联动 */
 .resume blockquote {
   margin: 16px 0 24px;
   padding: 10px 16px;
   border-left: 3px solid var(--accent);
   background: var(--accent-bg);
   color: var(--ink);
-  font-size: 13.5px;
+  font-size: calc(var(--resume-profile-size) * 13.5 / 30);
   border-radius: 0 4px 4px 0;
 }
 
@@ -108,7 +112,7 @@
 
 /* 小节标题 */
 .resume h2 {
-  font-size: 16px;
+  font-size: var(--resume-heading-size);
   font-weight: 700;
   margin: var(--resume-section-gap) 0 12px;
   padding-bottom: 6px;
@@ -129,21 +133,21 @@
   border-radius: 1px;
 }
 
-/* 条目标题（公司/项目名） */
+/* 条目标题（公司/项目名）：标题组，按 14.5/16 比例联动 */
 .resume h3 {
-  font-size: 14.5px;
+  font-size: calc(var(--resume-heading-size) * 14.5 / 16);
   font-weight: 600;
   margin: 14px 0 6px;
   color: var(--ink-strong);
 }
 
-/* h3 中的斜体常用作时间 */
+/* h3 中的斜体常用作时间：相对父级 h3 等比例 */
 .resume h3 em {
   float: right;
   font-style: normal;
   font-weight: 500;
   color: var(--accent);
-  font-size: 12.5px;
+  font-size: 0.862em;
   background: var(--accent-bg);
   padding: 1px 8px;
   border-radius: 10px;
@@ -222,7 +226,7 @@
   border-collapse: collapse;
   width: 100%;
   margin: 10px 0;
-  font-size: 13px;
+  font-size: calc(var(--resume-body-size) * 13 / 14);
 }
 
 .resume th,

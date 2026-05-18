@@ -25,6 +25,9 @@ interface SettingsPanelProps {
 }
 
 const KEYS: (keyof ResumeSettings)[] = [
+  'profileFontSize',
+  'headingFontSize',
+  'bodyFontSize',
   'sectionGap',
   'paragraphGap',
   'listItemGap',
