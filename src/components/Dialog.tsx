@@ -10,10 +10,11 @@ import {
 
 interface DialogOptions {
   title?: string;
-  message: string;
+  message: ReactNode;
   confirmText?: string;
   cancelText?: string;
   danger?: boolean;
+  variant?: 'default' | 'announcement';
 }
 
 interface InternalState {
@@ -80,9 +81,17 @@ export function DialogProvider({ children }: { children: ReactNode }) {
             if (e.target === e.currentTarget) close(false);
           }}
         >
-          <div className="dialog-card">
+          <div
+            className={`dialog-card${
+              state.options.variant === 'announcement' ? ' dialog-card-announcement' : ''
+            }`}
+          >
             {state.options.title && <h3 className="dialog-title">{state.options.title}</h3>}
-            <p className="dialog-message">{state.options.message}</p>
+            {typeof state.options.message === 'string' ? (
+              <p className="dialog-message">{state.options.message}</p>
+            ) : (
+              <div className="dialog-message">{state.options.message}</div>
+            )}
             <div className="dialog-actions">
               {state.kind === 'confirm' && (
                 <button

@@ -1,5 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { useDialog } from './components/Dialog';
 import { Editor } from './components/Editor';
 import { Preview } from './components/Preview';
 import { Toolbar } from './components/Toolbar';
@@ -16,6 +19,7 @@ import {
 
 const ACCENT_KEY = 'resumemd:accent';
 const MODE_KEY = 'resumemd:mode';
+const ANNOUNCEMENT_KEY = 'resumemd:announcement:v1';
 const DEFAULT_ACCENT = '#2563eb';
 
 type Mode = 'markdown' | 'form';
@@ -37,7 +41,50 @@ function readMode(): Mode {
   }
 }
 
+function hasSeenAnnouncement(): boolean {
+  try {
+    return localStorage.getItem(ANNOUNCEMENT_KEY) === '1';
+  } catch {
+    return true;
+  }
+}
+
+function markAnnouncementSeen() {
+  try {
+    localStorage.setItem(ANNOUNCEMENT_KEY, '1');
+  } catch {
+    // 忽略
+  }
+}
+
+const announcementMarkdown = `ResumeMD 是一个纯前端简历编辑工具。它无需登录，也不会将简历内容上传到服务器；编辑内容默认保存在当前浏览器中。
+
+### 数据保存与备份
+
+- 建议定期使用「下载 .md」或「下载 .json」导出备份。
+- 更换设备、清理浏览器数据、使用隐私模式，或浏览器存储异常时，本地内容可能无法恢复。
+
+### PDF 导出
+
+- PDF 导出基于浏览器打印功能，不同浏览器、纸张边距、缩放比例可能带来细微排版差异。
+- 导出前建议先检查右侧预览效果。
+
+### 公开页面
+
+- GitHub Pages 页面和 GitHub 仓库只公开工具本身，不包含浏览器中填写的简历内容。
+- 项目源码：[github.com/Zwenrenmuyuan/resume-md](https://github.com/Zwenrenmuyuan/resume-md)
+
+之后也可以通过顶部工具栏的「公告」按钮重新查看本提示。
+`;
+
+const announcementMessage = (
+  <div className="announcement-content">
+    <ReactMarkdown remarkPlugins={[remarkGfm]}>{announcementMarkdown}</ReactMarkdown>
+  </div>
+);
+
 export default function App() {
+  const { alert } = useDialog();
   const [mdContent, setMdContent] = useDebouncedLocalStorage<string>(
     'resumemd:content',
     defaultTemplate
@@ -62,6 +109,21 @@ export default function App() {
 
   const [mode, setMode] = useState<Mode>(readMode);
   const [accent, setAccent] = useState<string>(readAccent);
+
+  const showAnnouncement = useCallback(() => {
+    void alert({
+      title: '使用公告',
+      message: announcementMessage,
+      confirmText: '我知道了',
+      variant: 'announcement',
+    });
+  }, [alert]);
+
+  useEffect(() => {
+    if (hasSeenAnnouncement()) return;
+    markAnnouncementSeen();
+    showAnnouncement();
+  }, [showAnnouncement]);
 
   useEffect(() => {
     document.documentElement.style.setProperty('--accent', accent);
@@ -100,6 +162,7 @@ export default function App() {
         onSchemaChange={setSchema}
         onSchemaImport={setSchema}
         onSchemaReset={() => setSchema(buildDefaultSchema())}
+        onAnnouncementOpen={showAnnouncement}
       />
       <main className="workspace">
         <PanelGroup direction="horizontal">

@@ -18,6 +18,7 @@
 
   /* 隐藏所有非简历元素 */
   .toolbar,
+  .dialog-overlay,
   .editor-pane,
   .panel-editor,
   .resize-handle {

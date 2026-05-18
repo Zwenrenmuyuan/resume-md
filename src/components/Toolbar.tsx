@@ -27,6 +27,7 @@ interface ToolbarProps {
   onSchemaChange: (schema: ResumeSchema) => void;
   onSchemaImport: (schema: ResumeSchema) => void;
   onSchemaReset: () => void;
+  onAnnouncementOpen: () => void;
 }
 
 const PRESETS = [
@@ -52,6 +53,7 @@ export function Toolbar({
   onSchemaChange,
   onSchemaImport,
   onSchemaReset,
+  onAnnouncementOpen,
 }: ToolbarProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const avatarInputRef = useRef<HTMLInputElement>(null);
@@ -194,6 +196,9 @@ export function Toolbar({
         </button>
         <button onClick={() => window.print()} className="primary">
           导出 PDF
+        </button>
+        <button type="button" onClick={onAnnouncementOpen} className="notice-button">
+          公告
         </button>
         <button
           ref={settingsButtonRef}
