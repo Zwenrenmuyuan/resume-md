@@ -10,7 +10,7 @@ interface EditorProps {
   onChange: (next: string) => void;
 }
 
-const MARKDOWN_PLACEHOLDER = '# 张三\n\n> 用 Markdown 编写简历,支持 GFM 表格、列表和链接。';
+const MARKDOWN_PLACEHOLDER = '# XXX\n\n> 用 Markdown 编写简历,支持 GFM 表格、列表和链接。';
 
 const theme = EditorView.theme({
   '&': { height: '100%', fontSize: '14px', background: '#ffffff' },

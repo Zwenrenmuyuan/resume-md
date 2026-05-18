@@ -118,7 +118,7 @@ export function ProfileForm({ profile, onChange }: ProfileFormProps) {
             <TextInput
               value={profile.name}
               onChange={(e) => update('name', e.target.value)}
-              placeholder="张三"
+              placeholder="XXX"
             />
           </FormField>
         </div>

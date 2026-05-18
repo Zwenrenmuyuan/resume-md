@@ -12,8 +12,20 @@ interface PreviewProps {
   schema: ResumeSchema;
 }
 
+const externalLinkComponent: Components['a'] = ({ href, title, children }) => (
+  <a href={href} title={title} target="_blank" rel="noreferrer">
+    {children}
+  </a>
+);
+
+const markdownComponents: Components = {
+  a: externalLinkComponent,
+  p: ({ children }) => <p>{renderMarkdownSeparators(children)}</p>,
+};
+
 // 嵌入式 MD 渲染:把 h1-h4 降级为加粗段落,防止破坏外层简历的标题层级
 const inlineMdComponents: Components = {
+  a: externalLinkComponent,
   h1: ({ children }) => (
     <p>
       <strong>{children}</strong>
@@ -43,7 +55,9 @@ export function Preview({ mode, mdContent, schema }: PreviewProps) {
     <div className="preview-pane">
       {mode === 'markdown' ? (
         <ResumeArticle avatarSrc={markdown.avatarSrc}>
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdown.body}</ReactMarkdown>
+          <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+            {markdown.body}
+          </ReactMarkdown>
         </ResumeArticle>
       ) : (
         <SchemaPreview schema={schema} />
@@ -157,7 +171,9 @@ function renderHeaderItem(profile: Profile, id: string): React.ReactNode | null 
     return (
       <>
         {item.showLabel && item.label.trim() && `${item.label.trim()}：`}
-        <a href={item.href}>{content}</a>
+        <a href={item.href} target="_blank" rel="noreferrer">
+          {content}
+        </a>
       </>
     );
   }
@@ -172,10 +188,23 @@ function getHeaderDisplayValue(item: HeaderItem) {
 function renderHeaderLine(parts: React.ReactNode[], keyPrefix: string) {
   return parts.map((part, i) => (
     <React.Fragment key={`${keyPrefix}-${i}`}>
-      {i > 0 && ' · '}
+      {i > 0 && <span className="resume-header-separator">·</span>}
       {part}
     </React.Fragment>
   ));
+}
+
+function renderMarkdownSeparators(children: React.ReactNode) {
+  return React.Children.map(children, (child, childIndex) => {
+    if (typeof child !== 'string') return child;
+
+    return child.split(' · ').map((part, partIndex) => (
+      <React.Fragment key={`${childIndex}-${partIndex}`}>
+        {partIndex > 0 && <span className="resume-header-separator">·</span>}
+        {part}
+      </React.Fragment>
+    ));
+  });
 }
 
 function isPresent<T>(value: T | null): value is T {

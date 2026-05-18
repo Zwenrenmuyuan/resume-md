@@ -8,7 +8,7 @@ export function buildDefaultSchema(): ResumeSchema {
       id: newId('h_'),
       label: '邮箱',
       kind: 'text' as const,
-      value: 'zhangsan@example.com',
+      value: 'username@example.com',
       showLabel: false,
     },
     {
@@ -22,8 +22,8 @@ export function buildDefaultSchema(): ResumeSchema {
       id: newId('h_'),
       label: 'GitHub',
       kind: 'link' as const,
-      value: 'github.com/zhangsan',
-      href: 'https://github.com/zhangsan',
+      value: 'github.com/username',
+      href: 'https://github.com/username',
       showLabel: false,
     },
     {
@@ -37,12 +37,12 @@ export function buildDefaultSchema(): ResumeSchema {
 
   return {
     profile: {
-      name: '张三',
+      name: 'XXX',
       avatarSrc: '',
       headerItems,
       headerRows: buildDefaultHeaderRows(headerItems),
       summary:
-        '5 年全栈开发经验,擅长 React / Node.js,主导过日活 50 万级产品的前端架构。追求简洁、可维护的工程实践。',
+        '2026 届数据科学与大数据技术本科生，熟悉 Python / SQL / 数据分析基础，关注数据产品、前端可视化与工程化实践。',
     },
     sections: [
       {
@@ -52,37 +52,37 @@ export function buildDefaultSchema(): ResumeSchema {
         items: [
           {
             id: newId('i_'),
-            title: '复旦大学',
-            subtitle: '计算机科学与技术 · 本科',
-            start: '2017-09',
-            end: '2021-06',
+            title: 'XX大学',
+            subtitle: '数据科学与大数据技术 · 本科',
+            start: '2022.09',
+            end: '2026.06',
             description:
-              '- GPA 3.7 / 4.0,专业排名前 15%\n- 主修课程:算法与数据结构、操作系统、计算机网络、数据库系统\n- 校优秀毕业生 / 国家奖学金(2019)',
+              '- GPA 3.7 / 4.0，专业排名前 15%\n- 主修课程：概率论与数理统计、数据库系统、数据挖掘、机器学习、数据可视化\n- 参与校内数据分析竞赛与课程项目，负责数据清洗、建模分析和结果展示',
           },
         ],
       },
       {
         id: newId('s_'),
         type: 'timeline',
-        title: '工作经历',
+        title: '实习经历',
         items: [
           {
             id: newId('i_'),
             title: 'XX 科技',
-            subtitle: '高级前端工程师',
-            start: '2023-06',
-            end: '至今',
+            subtitle: '数据分析实习生',
+            start: '2025.06',
+            end: '2025.09',
             description:
-              '- 主导公司主站从 Vue 2 迁移至 React 18,构建产物体积下降 38%,首屏 LCP 从 3.2s 优化到 1.4s\n- 设计并落地组件库(30+ 通用组件),覆盖 5 条业务线,沉淀 80+ 篇内部文档\n- 推动单元测试覆盖率从 18% 提升至 76%,建立 PR 准入流水线',
+              '- 协助整理业务数据口径，使用 SQL 完成数据提取、清洗和基础统计分析\n- 基于 Python 生成周报数据表，减少手动整理时间，提升数据复盘效率\n- 参与数据看板需求梳理，输出指标说明和异常数据排查记录',
           },
           {
             id: newId('i_'),
-            title: 'YY 互联网',
-            subtitle: '前端工程师',
-            start: '2021-07',
-            end: '2023-05',
+            title: 'XX 信息技术',
+            subtitle: '前端开发实习生',
+            start: '2024.07',
+            end: '2024.09',
             description:
-              '- 负责电商交易链路前端,支撑双十一峰值 QPS 12k,活动期间零线上事故\n- 实现可视化埋点 SDK,被 4 个业务团队采用,节省人工埋点工时约 200h/季度',
+              '- 参与后台管理页面开发，完成列表筛选、表单录入和基础可视化组件\n- 配合后端完成接口联调，整理常见字段校验和错误提示规则\n- 根据反馈优化页面交互细节，提升表单填写和数据查看体验',
           },
         ],
       },
@@ -93,21 +93,21 @@ export function buildDefaultSchema(): ResumeSchema {
         items: [
           {
             id: newId('i_'),
-            title: '开源项目 awesome-resume',
-            subtitle: '个人项目',
-            start: '2024',
+            title: '课程项目：学生成绩分析系统',
+            subtitle: '课程项目',
+            start: '2025',
             end: '',
             description:
-              '- 一个基于 React 的简历生成器,支持 Markdown 编辑、PDF 导出\n- GitHub 1.2k stars,被多个求职社群推荐',
+              '- 使用 Python 对模拟成绩数据进行清洗、分组统计和趋势分析\n- 设计可视化图表展示课程通过率、成绩分布和重点关注学生名单\n- 输出分析报告，说明数据处理流程、结论和改进建议',
           },
           {
             id: newId('i_'),
-            title: '公司内部低代码平台',
-            subtitle: '主力开发',
-            start: '2022',
+            title: '课程项目：校园服务数据看板',
+            subtitle: '课程项目',
+            start: '2024',
             end: '',
             description:
-              '- 拖拽生成表单/列表页,覆盖 60% 后台需求,单页面平均开发耗时从 2 天降到 2 小时\n- 设计了基于 JSON Schema 的组件协议,支持自定义扩展',
+              '- 使用 React 搭建数据看板页面，展示访问量、服务分类和用户反馈趋势\n- 设计筛选、搜索和明细查看功能，支持按时间范围和服务类型查看数据\n- 使用组件化方式拆分页面模块，便于后续扩展图表和指标卡片',
           },
         ],
       },
@@ -116,18 +116,18 @@ export function buildDefaultSchema(): ResumeSchema {
         type: 'freeform',
         title: '技能清单',
         body:
-          '- **语言**:TypeScript / JavaScript / Python / Go(熟悉)\n' +
-          '- **前端**:React、Vue、Vite、Webpack、TailwindCSS、CSS-in-JS\n' +
-          '- **后端**:Node.js(Express / Nest)、PostgreSQL、Redis\n' +
-          '- **工程化**:Monorepo(pnpm / Turborepo)、CI/CD(GitHub Actions)、单元测试(Vitest / Jest)\n' +
-          '- **其他**:Linux、Docker、性能优化、可访问性(a11y)',
+          '- **语言**：Python / SQL / TypeScript / JavaScript\n' +
+          '- **数据分析**：Pandas、NumPy、Matplotlib、基础机器学习建模\n' +
+          '- **数据库**：MySQL、PostgreSQL、数据库设计与常用查询优化\n' +
+          '- **前端**：React、Vite、ECharts、HTML / CSS\n' +
+          '- **其他**：Git、Linux 基础、Markdown 文档写作',
       },
       {
         id: newId('s_'),
         type: 'freeform',
         title: '自我评价',
         body:
-          '热爱解决"难且正确"的问题,相信简洁的代码胜过聪明的代码。乐于分享,在团队内做过 10+ 次技术分享。业余时间维护开源项目,长期关注前端工程化和 DX 提升。',
+          '学习主动，重视数据分析过程中的口径一致性和结果可解释性。能够独立完成资料整理、问题拆解和文档输出，也愿意在项目中承担沟通协调和落地实现工作。',
       },
     ],
   };

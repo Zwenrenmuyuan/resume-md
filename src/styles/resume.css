@@ -85,6 +85,12 @@
   color: var(--ink-muted);
 }
 
+.resume-header-separator {
+  display: inline-block;
+  margin: 0 10px;
+  color: var(--ink-muted);
+}
+
 /* 个人简介引用块 */
 .resume blockquote {
   margin: 16px 0 24px;

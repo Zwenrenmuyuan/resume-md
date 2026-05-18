@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
-import ReactMarkdown from 'react-markdown';
+import ReactMarkdown, { type Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useDialog } from './components/Dialog';
 import { Editor } from './components/Editor';
@@ -77,9 +77,19 @@ const announcementMarkdown = `ResumeMD 是一个纯前端简历编辑工具。�
 之后也可以通过顶部工具栏的「公告」按钮重新查看本提示。
 `;
 
+const announcementMarkdownComponents: Components = {
+  a: ({ href, title, children }) => (
+    <a href={href} title={title} target="_blank" rel="noreferrer">
+      {children}
+    </a>
+  ),
+};
+
 const announcementMessage = (
   <div className="announcement-content">
-    <ReactMarkdown remarkPlugins={[remarkGfm]}>{announcementMarkdown}</ReactMarkdown>
+    <ReactMarkdown remarkPlugins={[remarkGfm]} components={announcementMarkdownComponents}>
+      {announcementMarkdown}
+    </ReactMarkdown>
   </div>
 );
 

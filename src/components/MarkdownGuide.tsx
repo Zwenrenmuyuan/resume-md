@@ -14,8 +14,8 @@ export function MarkdownGuide() {
         <p>
           这份结构和当前预览样式最匹配:姓名、联系方式、简介、经历区块、具体条目、成果列表。
         </p>
-        <pre>{`# 张三
-邮箱: zhangsan@example.com · 电话: 138-0000-0000 · GitHub: github.com/zhangsan · 上海
+        <pre>{`# XXX
+邮箱: username@example.com · 电话: 138-0000-0000 · GitHub: github.com/username · 上海
 
 > 5 年全栈开发经验,擅长 React / Node.js,主导过日活 50 万级产品的前端架构。
 
@@ -95,7 +95,7 @@ export function MarkdownGuide() {
         </ul>
         <pre>{`![头像](data:image/jpeg;base64,...)
 
-# 张三`}</pre>
+# XXX`}</pre>
       </section>
 
       <section className="markdown-guide-section">
