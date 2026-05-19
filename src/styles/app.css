@@ -9,6 +9,7 @@ body,
 #root {
   height: 100%;
   margin: 0;
+  overflow: hidden;
 }
 
 body {
@@ -210,6 +211,13 @@ body {
   flex: 1;
   min-height: 0;
   display: flex;
+  overflow: hidden;
+}
+
+.panel-editor,
+.panel-preview {
+  min-height: 0;
+  overflow: hidden;
 }
 
 .editor-pane {

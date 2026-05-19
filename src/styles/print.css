@@ -9,6 +9,7 @@
   #root,
   .app {
     height: auto !important;
+    overflow: visible !important;
     background: #ffffff !important;
   }
 
@@ -27,6 +28,7 @@
 
   .workspace {
     display: block !important;
+    overflow: visible !important;
   }
 
   /* 解除 react-resizable-panels 的内联宽度限制 */
