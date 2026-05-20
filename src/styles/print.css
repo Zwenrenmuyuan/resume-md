@@ -13,6 +13,11 @@
     background: #ffffff !important;
   }
 
+  .app {
+    position: static !important;
+    inset: auto !important;
+  }
+
   body {
     color: #000000;
   }

@@ -21,9 +21,12 @@ body {
 }
 
 .app {
+  position: fixed;
+  inset: 0;
   display: flex;
   flex-direction: column;
   height: 100%;
+  overflow: hidden;
 }
 
 /* ---- Toolbar ---- */
@@ -1071,10 +1074,20 @@ body {
   user-select: none;
 }
 
+.checkbox-field {
+  position: relative;
+}
+
 .checkbox-field input {
   position: absolute;
+  top: 50%;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  margin: 0;
   opacity: 0;
   pointer-events: none;
+  transform: translateY(-50%);
 }
 
 .checkbox-field-box {
