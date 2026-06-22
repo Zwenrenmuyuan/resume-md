@@ -178,6 +178,19 @@
   color: var(--accent);
 }
 
+.resume ul.resume-list-columns,
+.resume ol.resume-list-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 40px;
+  row-gap: var(--resume-list-item-gap);
+}
+
+.resume .resume-list-columns li {
+  min-width: 0;
+  margin: 0;
+}
+
 .resume a {
   color: var(--accent);
   text-decoration: none;

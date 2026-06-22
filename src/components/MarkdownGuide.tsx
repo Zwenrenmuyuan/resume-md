@@ -85,6 +85,20 @@ export function MarkdownGuide() {
       </section>
 
       <section className="markdown-guide-section">
+        <h3>横向列表</h3>
+        <p>
+          普通列表默认竖排。奖项、证书这类短条目需要横向展示时,在列表前单独加一行控制注释。
+        </p>
+        <pre>{`## 获奖经历
+
+<!-- resume:columns -->
+- 2025 全国大学生物联网设计竞赛国赛一等奖
+- 2025 全国大学生计算机设计大赛国赛三等奖
+- 2025 全国嵌入式芯片与系统设计竞赛国赛三等奖
+- 第十九届挑战杯大学生课外学术科技作品应用赛三等奖`}</pre>
+      </section>
+
+      <section className="markdown-guide-section">
         <h3>头像规则</h3>
         <ul>
           <li>头像通过顶部“上传头像”按钮处理,支持 JPEG、PNG、WebP。</li>

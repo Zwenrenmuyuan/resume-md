@@ -6,6 +6,16 @@ import { splitMarkdownAvatar } from '../utils/avatar';
 
 type Mode = 'markdown' | 'form';
 
+interface MarkdownNode {
+  type?: string;
+  value?: unknown;
+  children?: MarkdownNode[];
+  data?: {
+    hProperties?: Record<string, unknown>;
+    [key: string]: unknown;
+  };
+}
+
 interface PreviewProps {
   mode: Mode;
   mdContent: string;
@@ -17,6 +27,8 @@ const externalLinkComponent: Components['a'] = ({ href, title, children }) => (
     {children}
   </a>
 );
+
+const markdownRemarkPlugins = [remarkGfm, remarkColumnLists];
 
 const markdownComponents: Components = {
   a: externalLinkComponent,
@@ -55,7 +67,7 @@ export function Preview({ mode, mdContent, schema }: PreviewProps) {
     <div className="preview-pane">
       {mode === 'markdown' ? (
         <ResumeArticle avatarSrc={markdown.avatarSrc}>
-          <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+          <ReactMarkdown remarkPlugins={markdownRemarkPlugins} components={markdownComponents}>
             {markdown.body}
           </ReactMarkdown>
         </ResumeArticle>
@@ -87,7 +99,7 @@ function SchemaPreview({ schema }: { schema: ResumeSchema }) {
       )}
       {profile.summary.trim() && (
         <blockquote>
-          <ReactMarkdown remarkPlugins={[remarkGfm]} components={inlineMdComponents}>
+          <ReactMarkdown remarkPlugins={markdownRemarkPlugins} components={inlineMdComponents}>
             {profile.summary}
           </ReactMarkdown>
         </blockquote>
@@ -109,7 +121,7 @@ function SchemaPreview({ schema }: { schema: ResumeSchema }) {
                   </h3>
                   {item.description && (
                     <ReactMarkdown
-                      remarkPlugins={[remarkGfm]}
+                      remarkPlugins={markdownRemarkPlugins}
                       components={inlineMdComponents}
                     >
                       {item.description}
@@ -125,7 +137,7 @@ function SchemaPreview({ schema }: { schema: ResumeSchema }) {
             {section.title && <h2>{section.title}</h2>}
             {section.body && (
               <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
+                remarkPlugins={markdownRemarkPlugins}
                 components={inlineMdComponents}
               >
                 {section.body}
@@ -205,6 +217,54 @@ function renderMarkdownSeparators(children: React.ReactNode) {
       </React.Fragment>
     ));
   });
+}
+
+function remarkColumnLists() {
+  return (tree: MarkdownNode) => {
+    markColumnLists(tree);
+  };
+}
+
+function markColumnLists(parent: MarkdownNode) {
+  const children = parent.children;
+  if (!children) return;
+
+  for (let index = 0; index < children.length; index += 1) {
+    const child = children[index];
+
+    if (child.type === 'html' && isColumnListMarker(child.value)) {
+      const next = children[index + 1];
+      if (next?.type === 'list') {
+        addClassName(next, 'resume-list-columns');
+      }
+      children.splice(index, 1);
+      index -= 1;
+      continue;
+    }
+
+    markColumnLists(child);
+  }
+}
+
+function isColumnListMarker(value: unknown) {
+  return typeof value === 'string' && /^\s*<!--\s*resume:columns\s*-->\s*$/.test(value);
+}
+
+function addClassName(node: MarkdownNode, className: string) {
+  const data = node.data ?? (node.data = {});
+  const hProperties = data.hProperties ?? (data.hProperties = {});
+  const existingClassName = hProperties.className;
+  const classNames = Array.isArray(existingClassName)
+    ? existingClassName.filter((name): name is string => typeof name === 'string')
+    : typeof existingClassName === 'string'
+      ? existingClassName.split(/\s+/).filter(Boolean)
+      : [];
+
+  if (!classNames.includes(className)) {
+    classNames.push(className);
+  }
+
+  hProperties.className = classNames.join(' ');
 }
 
 function isPresent<T>(value: T | null): value is T {
