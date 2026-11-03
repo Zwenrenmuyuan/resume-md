@@ -6,6 +6,7 @@ import {
   setMarkdownAvatar,
 } from '../utils/avatar';
 import { downloadJSON, downloadMarkdown, readFileAsText } from '../utils/file';
+import { parseResumeSchema } from '../utils/resume';
 import type { ResumeSchema } from '../types/schema';
 import type { ResumeSettings } from '../types/settings';
 import { useDialog } from './Dialog';
@@ -69,18 +70,7 @@ export function Toolbar({
     try {
       const text = await readFileAsText(file);
       if (isForm) {
-        const parsed = JSON.parse(text) as ResumeSchema;
-        if (
-          !parsed.profile ||
-          typeof parsed.profile.avatarSrc !== 'string' ||
-          !Array.isArray(parsed.profile.headerItems) ||
-          !Array.isArray(parsed.profile.headerRows) ||
-          !parsed.profile.headerRows.every(Array.isArray) ||
-          !Array.isArray(parsed.sections)
-        ) {
-          throw new Error('Invalid schema');
-        }
-        onSchemaImport(parsed);
+        onSchemaImport(parseResumeSchema(text));
       } else {
         onMdImport(text);
       }

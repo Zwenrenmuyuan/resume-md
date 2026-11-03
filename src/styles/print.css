@@ -1,6 +1,6 @@
 @page {
   size: A4;
-  margin: 16mm 14mm;
+  margin: var(--resume-page-margin-y) var(--resume-page-margin-x);
 }
 
 @media print {
@@ -24,6 +24,7 @@
 
   /* 隐藏所有非简历元素 */
   .toolbar,
+  .workspace-notice,
   .dialog-overlay,
   .editor-pane,
   .panel-editor,
@@ -62,18 +63,25 @@
     width: 100% !important;
   }
 
-  .resume {
-    --resume-avatar-width: 24mm;
-    --resume-avatar-height: 32mm;
-    --resume-avatar-right: 0mm;
-    --resume-avatar-top: 0mm;
-    --resume-avatar-header-space: 30mm;
-
-    max-width: none !important;
+  .preview-frame {
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
     margin: 0 !important;
-    padding: 0 !important;
+    overflow: visible !important;
     box-shadow: none !important;
     border-radius: 0 !important;
+  }
+
+  .preview-paper {
+    position: static !important;
+    width: auto !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    transform: none !important;
+  }
+
+  .resume {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
@@ -92,14 +100,6 @@
 
   .resume h1 {
     margin-top: 0;
-  }
-
-  .resume-avatar {
-    top: var(--resume-avatar-top);
-    right: var(--resume-avatar-right);
-    width: var(--resume-avatar-width);
-    height: var(--resume-avatar-height);
-    margin: 0;
   }
 
   /* 分页控制：避免标题孤行 */

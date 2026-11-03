@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import ReactMarkdown, { type Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import type { HeaderItem, Profile, ResumeSchema } from '../types/schema';
@@ -61,19 +61,45 @@ const inlineMdComponents: Components = {
 };
 
 export function Preview({ mode, mdContent, schema }: PreviewProps) {
+  const paneRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef<HTMLDivElement>(null);
+  const paperRef = useRef<HTMLDivElement>(null);
   const markdown = splitMarkdownAvatar(mdContent);
 
+  useLayoutEffect(() => {
+    const pane = paneRef.current!;
+    const frame = frameRef.current!;
+    const paper = paperRef.current!;
+    let availableWidth = 0;
+    const observer = new ResizeObserver((entries) => {
+      const paneEntry = entries.find((entry) => entry.target === pane);
+      if (paneEntry) availableWidth = paneEntry.contentRect.width;
+      const scale = Math.min(1, availableWidth / paper.offsetWidth);
+      frame.style.width = `${paper.offsetWidth * scale}px`;
+      frame.style.height = `${paper.offsetHeight * scale}px`;
+      // transform 保留原始换行，缩放后的占位尺寸由 frame 承担。
+      paper.style.transform = `scale(${scale})`;
+    });
+    observer.observe(pane);
+    observer.observe(paper);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="preview-pane">
-      {mode === 'markdown' ? (
-        <ResumeArticle avatarSrc={markdown.avatarSrc}>
-          <ReactMarkdown remarkPlugins={markdownRemarkPlugins} components={markdownComponents}>
-            {markdown.body}
-          </ReactMarkdown>
-        </ResumeArticle>
-      ) : (
-        <SchemaPreview schema={schema} />
-      )}
+    <div className="preview-pane" ref={paneRef}>
+      <div className="preview-frame" ref={frameRef}>
+        <div className="preview-paper" ref={paperRef}>
+          {mode === 'markdown' ? (
+            <ResumeArticle avatarSrc={markdown.avatarSrc}>
+              <ReactMarkdown remarkPlugins={markdownRemarkPlugins} components={markdownComponents}>
+                {markdown.body}
+              </ReactMarkdown>
+            </ResumeArticle>
+          ) : (
+            <SchemaPreview schema={schema} />
+          )}
+        </div>
+      </div>
     </div>
   );
 }

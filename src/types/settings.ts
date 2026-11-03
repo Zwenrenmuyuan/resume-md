@@ -28,6 +28,19 @@ export const SETTINGS_RANGE = {
   lineHeight: { min: 1.3, max: 2.2, step: 0.05, unit: '', label: '行高' },
 } as const;
 
+export function parseSettings(raw: string): ResumeSettings {
+  const saved: Partial<ResumeSettings> | null = JSON.parse(raw);
+  const settings = { ...DEFAULT_SETTINGS };
+  for (const key of Object.keys(settings) as (keyof ResumeSettings)[]) {
+    const value = saved?.[key];
+    const { min, max } = SETTINGS_RANGE[key];
+    if (typeof value === 'number' && Number.isFinite(value)) {
+      settings[key] = Math.min(max, Math.max(min, value));
+    }
+  }
+  return settings;
+}
+
 export function applySettingsToCss(s: ResumeSettings) {
   const root = document.documentElement.style;
   root.setProperty('--resume-profile-size', `${s.profileFontSize}px`);

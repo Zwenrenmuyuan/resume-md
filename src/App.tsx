@@ -11,9 +11,11 @@ import { useDebouncedLocalStorage } from './hooks/useDebouncedLocalStorage';
 import { defaultTemplate } from './templates/default';
 import { buildDefaultSchema } from './templates/defaultSchema';
 import type { ResumeSchema } from './types/schema';
+import { parseResumeSchema } from './utils/resume';
 import {
   DEFAULT_SETTINGS,
   applySettingsToCss,
+  parseSettings,
   type ResumeSettings,
 } from './types/settings';
 
@@ -95,25 +97,25 @@ const announcementMessage = (
 
 export default function App() {
   const { alert } = useDialog();
-  const [mdContent, setMdContent] = useDebouncedLocalStorage<string>(
+  const [mdContent, setMdContent, mdSaveFailed] = useDebouncedLocalStorage<string>(
     'resumemd:content',
     defaultTemplate
   );
-  const [schema, setSchema] = useDebouncedLocalStorage<ResumeSchema>(
+  const [schema, setSchema, schemaSaveFailed] = useDebouncedLocalStorage<ResumeSchema>(
     'resumemd:schema',
     buildDefaultSchema(),
     {
-      serialize: (v) => JSON.stringify(v),
-      deserialize: (raw) => JSON.parse(raw) as ResumeSchema,
+      serialize: JSON.stringify,
+      deserialize: parseResumeSchema,
     }
   );
-  const [settings, setSettings] = useDebouncedLocalStorage<ResumeSettings>(
+  const [settings, setSettings, settingsSaveFailed] = useDebouncedLocalStorage<ResumeSettings>(
     'resumemd:settings',
     DEFAULT_SETTINGS,
     {
       delay: 200,
-      serialize: (v) => JSON.stringify(v),
-      deserialize: (raw) => ({ ...DEFAULT_SETTINGS, ...JSON.parse(raw) }),
+      serialize: JSON.stringify,
+      deserialize: parseSettings,
     }
   );
 
@@ -174,6 +176,14 @@ export default function App() {
         onSchemaReset={() => setSchema(buildDefaultSchema())}
         onAnnouncementOpen={showAnnouncement}
       />
+      <div className="workspace-notice">
+        <span>Markdown 与表单分别保存，内容不会互相同步。</span>
+        {(mdSaveFailed || schemaSaveFailed || settingsSaveFailed) && (
+          <span className="save-error" role="alert">
+            自动保存失败，请下载简历文件备份后再关闭页面。
+          </span>
+        )}
+      </div>
       <main className="workspace">
         <PanelGroup direction="horizontal">
           <Panel defaultSize={50} minSize={20} className="panel-editor">

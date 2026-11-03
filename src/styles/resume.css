@@ -7,6 +7,8 @@
   --ink: #1f2937;
   --ink-muted: #64748b;
   --line: #e5e7eb;
+  --resume-page-margin-y: 16mm;
+  --resume-page-margin-x: 14mm;
 
   /* 可调字号与间距(SettingsPanel 控制) */
   /* 三组字号基准:个人信息以姓名 h1 为基准,标题以 h2 为基准,正文为整体基础 */
@@ -20,20 +22,15 @@
 }
 
 .resume {
-  --resume-avatar-width: 88px;
-  --resume-avatar-height: 118px;
-  --resume-avatar-right: 56px;
-  --resume-avatar-top: 36px;
-  --resume-avatar-header-space: 112px;
+  --resume-avatar-width: 24mm;
+  --resume-avatar-height: 32mm;
+  --resume-avatar-right: 0mm;
+  --resume-avatar-top: 0mm;
+  --resume-avatar-header-space: 30mm;
 
   position: relative;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 48px 56px;
   background: #ffffff;
   color: var(--ink);
-  border-radius: 4px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
   font-size: var(--resume-body-size);
   line-height: var(--resume-line-height);
 }

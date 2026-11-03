@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface Options<T> {
   delay?: number;
@@ -6,23 +6,14 @@ interface Options<T> {
   deserialize?: (raw: string) => T;
 }
 
-const defaultStringOptions: Required<Options<string>> = {
-  delay: 500,
-  serialize: (v) => v,
-  deserialize: (s) => s,
-};
-
 export function useDebouncedLocalStorage<T>(
   key: string,
   initialValue: T,
   options?: Options<T>
-): [T, (next: T) => void] {
+): [T, (next: T) => void, boolean] {
   const delay = options?.delay ?? 500;
-  const serialize =
-    options?.serialize ?? ((defaultStringOptions.serialize as unknown) as (v: T) => string);
-  const deserialize =
-    options?.deserialize ??
-    ((defaultStringOptions.deserialize as unknown) as (raw: string) => T);
+  const serialize = options?.serialize ?? String;
+  const deserialize = options?.deserialize ?? ((raw: string) => raw as T);
 
   const [value, setValue] = useState<T>(() => {
     try {
@@ -34,25 +25,45 @@ export function useDebouncedLocalStorage<T>(
     }
   });
 
-  const timer = useRef<number | null>(null);
+  const [saveFailed, setSaveFailed] = useState(false);
+  // 只写入编辑后的内容，避免用默认模板覆盖读取失败的原始缓存。
+  const pending = useRef<{ value: T } | null>(null);
+  const timer = useRef<number>();
+
+  const save = useCallback(() => {
+    window.clearTimeout(timer.current);
+    if (!pending.current) return;
+    try {
+      localStorage.setItem(key, serialize(pending.current.value));
+      pending.current = null;
+      setSaveFailed(false);
+    } catch {
+      setSaveFailed(true);
+    }
+  }, [key, serialize]);
+
+  const update = useCallback(
+    (next: T) => {
+      pending.current = { value: next };
+      setValue(next);
+      window.clearTimeout(timer.current);
+      timer.current = window.setTimeout(save, delay);
+    },
+    [delay, save]
+  );
 
   useEffect(() => {
-    if (timer.current !== null) {
-      window.clearTimeout(timer.current);
+    function onVisibilityChange() {
+      if (document.visibilityState === 'hidden') save();
     }
-    timer.current = window.setTimeout(() => {
-      try {
-        localStorage.setItem(key, serialize(value));
-      } catch {
-        // 配额超出或隐私模式下静默失败
-      }
-    }, delay);
+    window.addEventListener('pagehide', save);
+    document.addEventListener('visibilitychange', onVisibilityChange);
     return () => {
-      if (timer.current !== null) {
-        window.clearTimeout(timer.current);
-      }
+      window.removeEventListener('pagehide', save);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+      save();
     };
-  }, [key, value, delay, serialize]);
+  }, [save]);
 
-  return [value, setValue];
+  return [value, update, saveFailed];
 }
